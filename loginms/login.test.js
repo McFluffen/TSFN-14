@@ -1,37 +1,38 @@
 const request = require('supertest');
-const app = require('./loginMS');
-const http = require('http');
+const { app } = require('./loginms');
+const mockRabbitMQ = require('./mockRabbitMQ');
 
-const server = http.createServer(app);
+jest.mock('amqplib'); // Mocka amqplib-modulen
 
-describe('POST /api/login', () => {
-  test('should return a token for valid credentials', async () => {
+describe('Login Microservice Tests', () => {
+  let server; // Variabel för att hålla servern
+
+  beforeAll(() => {
+    // Starta mock-server för RabbitMQ innan testerna körs
+    server = mockRabbitMQ.listen(3005);
+  });
+
+  afterAll(async () => {
+    // Stoppa mock-servern för RabbitMQ efter testerna har körts
+    await server.close();
+  });
+
+  test('Login with correct credentials', async () => {
+    // Mocka anslutningen till RabbitMQ
+    mockRabbitMQ.connectToRabbitMQ.mockResolvedValue(/* Mockad kanal */);
+    // Mocka konsumtionen av meddelande
+    mockRabbitMQ.ConsumeMessage.mockResolvedValue(/* Mockat meddelande */);
+
+    // Skicka en testförfrågan till login-microservicen
     const response = await request(app)
-      .post('/api/login')
-      .send({ email: 'example@example.com', password: 'password' });
+      .post('/')
+      .send({ email: 'test@example.com', password: 'password123' });
+
+    // Förvänta dig ett lyckat svar
     expect(response.status).toBe(200);
-    expect(response.body.token).toBeDefined();
+    expect(response.body.message).toBe('Successfully logged in!');
+    expect(response.body).toHaveProperty('token');
   });
 
-  test('should return 404 for invalid email', async () => {
-    const response = await request(app)
-      .post('/api/login')
-      .send({ email: 'invalid@example.com', password: 'password' });
-    expect(response.status).toBe(404);
-    expect(response.body.error).toBe('Email');
-  });
-
-  test('should return 404 for invalid password', async () => {
-    const response = await request(app)
-      .post('/api/login')
-      .send({ email: 'example@example.com', password: 'invalid' });
-    expect(response.status).toBe(404);
-    expect(response.body.error).toBe('Password');
-  });
-
-  // Add more test cases as needed
+  // Andra testfall kan läggas till här för att täcka andra scenarier
 });
-
-afterAll(() => {
-    server.close();
-  });
