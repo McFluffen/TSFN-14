@@ -1,38 +1,74 @@
-const request = require('supertest');
-const { app } = require('./loginms');
-const mockRabbitMQ = require('./mockRabbitMQ');
+const axios = require('axios');
+const {
+  validateFirstname,
+  validateLastname,
+  validateEmail,
+  validatePassword,
+  existingEmailCheck,
+} = require('./inputValidation');
 
-jest.mock('amqplib'); // Mocka amqplib-modulen
 
-describe('Login Microservice Tests', () => {
-  let server; // Variabel för att hålla servern
+// Mocking Axios
+jest.mock('axios');
 
-  beforeAll(() => {
-    // Starta mock-server för RabbitMQ innan testerna körs
-    server = mockRabbitMQ.listen(3005);
+describe('Input Validation Functions', () => {
+  describe('validateFirstname', () => {
+    test('return true for a non-empty string', () => {
+      expect(validateFirstname('beep')).toBe(true);
+    });
+
+    test('return false for an empty string', () => {
+      expect(validateFirstname('')).toBe(false);
+    });
   });
 
-  afterAll(async () => {
-    // Stoppa mock-servern för RabbitMQ efter testerna har körts
-    await server.close();
+  describe('validateLastname', () => {
+    test('return true for a non-empty string', () => {
+      expect(validateLastname('boop')).toBe(true);
+    });
+
+    test('return false for an empty string', () => {
+      expect(validateLastname('')).toBe(false);
+    });
   });
 
-  test('Login with correct credentials', async () => {
-    // Mocka anslutningen till RabbitMQ
-    mockRabbitMQ.connectToRabbitMQ.mockResolvedValue(/* Mockad kanal */);
-    // Mocka konsumtionen av meddelande
-    mockRabbitMQ.ConsumeMessage.mockResolvedValue(/* Mockat meddelande */);
+  describe('validateEmail', () => {
+    test('return true for a valid email address', () => {
+      expect(validateEmail('test@testing.com')).toBe(true);
+    });
 
-    // Skicka en testförfrågan till login-microservicen
-    const response = await request(app)
-      .post('/')
-      .send({ email: 'test@example.com', password: 'password123' });
-
-    // Förvänta dig ett lyckat svar
-    expect(response.status).toBe(200);
-    expect(response.body.message).toBe('Successfully logged in!');
-    expect(response.body).toHaveProperty('token');
+    test('return false for an invalid email address', () => {
+      expect(validateEmail('invalid_email_address')).toBe(false);
+    });
   });
 
-  // Andra testfall kan läggas till här för att täcka andra scenarier
+  describe('validatePassword', () => {
+    test('return true if passwords match', () => {
+      expect(validatePassword('password', 'password')).toBe(true);
+    });
+
+    test('return false if passwords do not match', () => {
+      expect(validatePassword('beepity', 'boopity')).toBe(false);
+    });
+  });
+
+  describe('existingEmailCheck', () => {
+    test('return true if user exists', async () => {
+      axios.get.mockResolvedValue({ data: { error: 'User not found' } });
+      const result = await existingEmailCheck('existing@email.com');
+      expect(result).toBe(true);
+    });
+
+    test('return false if user does not exist', async () => {
+      axios.get.mockRejectedValue({ response: { data: { error: 'User not found' } } });
+      const result = await existingEmailCheck('nonexisting@email.com');
+      expect(result).toBe(false);
+    });
+
+    test('should handle server error', async () => {
+      axios.get.mockRejectedValue({ response: { data: { error: 'Server error' } } });
+      const result = await existingEmailCheck('example@email.com');
+      expect(result).toBe(undefined); // or handle as per your requirement
+    });
+  });
 });
