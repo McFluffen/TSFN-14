@@ -1,12 +1,13 @@
 const jwt = require("jsonwebtoken");
-const express = require('express')  
+const express = require('express');
+const axios = require('axios');  
 const app = express()
 const PORT = 5055
 
 
 async function FetchUserFromDB(email,password){
 try{
-    const user = await axios.get(`20.76.217.223/users/${email}`)
+    const user = await axios.get(`http://20.76.217.223/users/${email}`)
         return user
     }
 catch(error){
@@ -16,15 +17,14 @@ catch(error){
 const loginUser = async (req, res) => {
 try {       
     const { email, password } = req.body;
-    const response = FetchUserFromDB(email,password)
-    console.log(`${response.email} and ${response.password}`)
+    const response = await FetchUserFromDB(email,password)
+    console.log(`${response.data.email} and ${response.data.password}`)
 
         if(response.status == 200){
-
-            const token = jwt.sign({email},process.env.KEY,{expiresIn:'1h'})
-                return res.status(200).json({ message: "Successfully logged in!",token:token});
+            const token = jwt.sign({email},"superSecretKey",{expiresIn:'1h'})
+            return res.status(200).json({ message: "Successfully logged in!",token:token});
         }
-        else if(response.body.password != req.body.password){
+        else if(response.data.password != req.body.password){
             return res.status(404).json({ error: 'Password' });
         }
         else if(response.status == 404)

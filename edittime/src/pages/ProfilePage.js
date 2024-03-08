@@ -55,7 +55,7 @@ function ProfilePage () {
     useEffect(() => {
 
         const token = localStorage.getItem('token')
-        const decodedToken = jwt_decode(token,process.env.KEY)
+        const decodedToken = jwt_decode(token,"SuperSecretKey")
         const NameID = decodedToken.email;
 
         const getUserData = async () => {
@@ -101,7 +101,7 @@ function ProfilePage () {
         //change this axios to go to the updateUser api instead, and more or less rewrite the updateUser call to look like createUser
         try {
             const token = localStorage.getItem('token')
-        const decodedToken = jwt_decode(token,process.env.KEY)
+        const decodedToken = jwt_decode(token,"SuperSecretKey")
         const NameID = decodedToken.email;
             console.log(NameID)
         await axios.patch(`http://${gatewayIP}/users/${NameID}`, userData)

@@ -25,8 +25,8 @@ function createDynamicProxy(targetIP) {
 }
 
 app.use('/event', createDynamicProxy('10.0.153.35'));
-app.use('/users', createDynamicProxy('10.0.128.16:5002'));
-app.use('/login', createDynamicProxy('10.0.75.8:5055'));
+app.use('/users', createDynamicProxy('10.0.128.16'));
+app.use('/login', createDynamicProxy('10.0.75.8'));
 
 
 app.get('/healthz', (req, res) => {

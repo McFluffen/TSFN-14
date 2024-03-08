@@ -1,7 +1,7 @@
 //Models
 const User = require('./Models');
 const mongoose = require('mongoose')
-//const { validateFirstname, validateLastname, validateEmail, validatePassword, existingEmailCheck } = require('../LoginMS/index');
+const { validateFirstname, validateLastname, validateEmail, validatePassword, existingEmailCheck } = require('./inputValidation');
 
 
 const getAllUsers = async (req, res) => {
@@ -34,6 +34,7 @@ const getUser = async (req, res) => {
         return res.status(404).json({ error: 'User not found' });
       }
       console.log("found by email");
+      console.log(user.email);
       return res.status(200).json(user);
     }
 
@@ -59,6 +60,7 @@ const getUser = async (req, res) => {
 
 //TESTED: WORKS
 const createUser = async (req, res) => {
+  console.log(req.body);
   const { email, password, passwordConfirm, firstname, lastname, country } = req.body;
   try {
       //Some console logs for bug searching
