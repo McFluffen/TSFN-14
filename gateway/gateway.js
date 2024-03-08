@@ -13,7 +13,7 @@ function createDynamicProxy(targetIP) {
   return createProxyMiddleware({ 
     target: `http://${targetIP}`, 
     changeOrigin: true,
-    onProxyReq(proxyReq, req, res) {
+    onProxyReq:(proxyReq, req, res) => {
       if (req.body) {
         const bodyData = JSON.stringify(req.body);
         proxyReq.setHeader('Content-Type', 'application/json');
