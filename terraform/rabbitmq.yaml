@@ -34,7 +34,7 @@ metadata:
 spec:
   selector:
     app: rabbitmq
-  type: ClusterIP
+  
   ports:
     - name: rabbitmq-port
       protocol: TCP
@@ -44,3 +44,4 @@ spec:
       protocol: TCP
       port: 15672
       targetPort: 15672
+  type: LoadBalancer

@@ -13,7 +13,7 @@ function createDynamicProxy(targetIP) {
   return createProxyMiddleware({ 
     target: `http://${targetIP}`, 
     changeOrigin: true,
-    onProxyReq(proxyReq, req, res) {
+    onProxyReq:(proxyReq, req, res) => {
       if (req.body) {
         const bodyData = JSON.stringify(req.body);
         proxyReq.setHeader('Content-Type', 'application/json');
@@ -24,9 +24,9 @@ function createDynamicProxy(targetIP) {
   });
 }
 
-app.use('/event', createDynamicProxy('10.0.153.35:5002'));
-app.use('/users', createDynamicProxy('10.0.128.16:5001'));
-app.use('/login', createDynamicProxy('10.0.75.8:5055'));
+app.use('/event', createDynamicProxy('10.0.153.35'));
+app.use('/users', createDynamicProxy('10.0.128.16'));
+app.use('/login', createDynamicProxy('10.0.75.8'));
 
 
 app.get('/healthz', (req, res) => {
