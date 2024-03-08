@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const jwt = require("jsonwebtoken");
 const express = require('express')  
 const app = express()
@@ -46,7 +45,7 @@ app.use((req,res,next)=>{
     next()
 })
 
-app.post("/",loginUser)
+app.post("/login/",loginUser)
     
 try{
     app.listen(PORT, () => {

@@ -3,12 +3,7 @@ const app = express();
 const {getUser,createUser,updateUser,getAllUsers} = require("./UserFunctions")
 const mongoose = require('mongoose')
 const cors = require('cors')
-const axios = require('axios')
 const PORT = 5001
-const amqp = require('amqplib')
-const RabbitURL = "10.244.0.17"
-const URL = "10.0.128.16"
-const QUEUE_NAME = "User_Login_SendQueue"
 
 // Middleware to log incoming requests
 app.use(cors())
@@ -20,15 +15,15 @@ app.use((req, res, next) => {
 });
 
 //Get user
-app.get('/:id',getUser)
+app.get('/users/:id',getUser)
 
 //Create a new user
-app.post('/', createUser)
+app.post('/users', createUser)
 
 //Update a user 
-app.patch('/:id',updateUser)
+app.patch('/users/:id',updateUser)
 
-app.get('/user', getAllUsers)
+app.get('/users/user', getAllUsers)
 
 
 mongoose.connect("mongodb+srv://userDB:jH3ctwIUnr0nlEGr@user.q5hnsyx.mongodb.net/?retryWrites=true&w=majority")
