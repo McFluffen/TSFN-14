@@ -46,12 +46,14 @@ app.use((req,res,next)=>{
 })
 
 app.post("/login/",loginUser)
-    
-try{
-    app.listen(PORT, () => {
-        console.log(`Server listening at ${PORT}`);
-        
-      });
-} catch(error){
-    console.error(error)
+
+// Only start the server if this file is run directly (not required by another file)
+if (require.main === module) {
+    try {
+        app.listen(PORT, () => {
+            console.log(`Server listening at ${PORT}`);
+        });
+    } catch (error) {
+        console.error(error);
+    }
 }
