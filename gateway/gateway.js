@@ -24,9 +24,9 @@ function createDynamicProxy(targetIP) {
   });
 }
 
-app.use('/event', createDynamicProxy('10.0.153.35'));
-app.use('/users', createDynamicProxy('10.0.128.16'));
-app.use('/login', createDynamicProxy('10.0.75.8'));
+app.use('/event', createDynamicProxy('eventmicroservice.default.svc.cluster.local'));
+app.use('/users', createDynamicProxy('usermicroservice.default.svc.cluster.local'));
+app.use('/login', createDynamicProxy('loginms.default.svc.cluster.local'));
 
 
 app.get('/healthz', (req, res) => {
