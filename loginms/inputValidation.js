@@ -1,5 +1,4 @@
 const axios = require('axios');
-const { connectToRabbitMQ,ConsumeMessage } = require('./loginMS');
 
 function validateFirstname(firstname) {
     // Custom validation logic here
@@ -22,7 +21,7 @@ async function existingEmailCheck(email) {
   try {
       //we can use the response later for logging in if needed
       //RabbitMQ
-      const response = await axios.get(`http://localhost:3001/api/users/${email}`)
+      const response = await axios.get(`http://20.76.217.223/users/${email}`)
       console.log("User exists");
       return true;
   } catch(error) {

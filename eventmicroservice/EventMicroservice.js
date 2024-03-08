@@ -16,11 +16,11 @@ app.use((req, res,next) => {
 });
 
 //Routing 
-app.get('/:id/:date',getUserEvents)
-app.get('/:id/:date/:time',getUserEventsTime)
+app.get('/event/:id/:date',getUserEvents)
+app.get('/event/:id/:date/:time',getUserEventsTime)
 app.post('/event',createEvent)
-app.patch('/:id/:date/:time',updateEvent)
-app.delete('/:id/:date/:time', deleteEvent)
+app.patch('/event/:id/:date/:time',updateEvent)
+app.delete('/event/:id/:date/:time', deleteEvent)
 
 
 mongoose.connect("mongodb+srv://eventDB:o5tjTk5a1qUASHN2@event.pthdyde.mongodb.net/eventDB?retryWrites=true&w=majority")
