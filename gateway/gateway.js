@@ -24,9 +24,9 @@ function createDynamicProxy(targetIP) {
   });
 }
 
-app.use('/event', createDynamicProxy('eventmicroservice.default.svc.cluster.local'));
-app.use('/users', createDynamicProxy('usermicroservice.default.svc.cluster.local'));
-app.use('/login', createDynamicProxy('loginms.default.svc.cluster.local'));
+app.use('/event', createDynamicProxy('eventmicroservice.default.svc.cluster.local:5002'));
+app.use('/users', createDynamicProxy('usermicroservice.default.svc.cluster.local:5001'));
+app.use('/login', createDynamicProxy('loginms.default.svc.cluster.local:5055'));
 
 
 app.get('/healthz', (req, res) => {
