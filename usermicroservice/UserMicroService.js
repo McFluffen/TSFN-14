@@ -14,6 +14,8 @@ app.use((req, res, next) => {
     next();
 });
 
+
+app.get('/users/user', getAllUsers)
 //Get user
 app.get('/users/:id',getUser)
 
@@ -23,7 +25,7 @@ app.post('/users', createUser)
 //Update a user 
 app.patch('/users/:id',updateUser)
 
-app.get('/users/user', getAllUsers)
+
 
 
 mongoose.connect("mongodb+srv://userDB:jH3ctwIUnr0nlEGr@user.q5hnsyx.mongodb.net/?retryWrites=true&w=majority")

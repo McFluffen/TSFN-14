@@ -13,7 +13,7 @@ function SchedulingPopup({formattedDate}) {
 
   let userEmail = [];
   let addedUserRole = [];
-  axios.get(`http://${gatewayIP}/users`)
+  axios.get(`http://${gatewayIP}/users/user`)
   .then(response => {
     console.log(response)
     response.data.forEach(element => {
